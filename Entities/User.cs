@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MedicalAPI.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace MedicalAPI.Entities;
 
@@ -13,7 +14,7 @@ public class User
 	public string? Password { get; set; } = string.Empty; // Password hash
 	public string RefreshToken { get; set; } = string.Empty; // Refresh token
 	public DateTime? RefreshTokenExpiryTime { get; set; } // Refresh token expiry time
-	public string Role { get; set; } = "user"; // user, admin
+	public string Role { get; set; } = StaticRoles.User; // user, admin
 	public string? ContactPhone { get; set; } // Phone number
 	public int Gender { get; set; } = 0; // 0 -	undefined, 1 - m, 2 - f
 	public DateOnly? BirthDate { get; set; }
