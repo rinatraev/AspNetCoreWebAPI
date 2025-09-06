@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -56,32 +57,43 @@ public class AuthService
 	private bool ValidateAccessToken(string accessToken)
 	{
 		var handler = new JwtSecurityTokenHandler();
-		var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
-		bool tokenIsValid= false;
+		var signingKey = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+
+		SecurityToken validatedToken;
+		ClaimsPrincipal claims;
+		var validationParams = new TokenValidationParameters()
+		{
+			ValidateIssuer = false,
+			ValidateAudience = false,
+			ValidateIssuerSigningKey = true,
+			IssuerSigningKey = new SymmetricSecurityKey(signingKey),
+			ValidateLifetime = true // проверка, что не истёк
+		};
+
 		try
 		{
-			handler.ValidateToken(accessToken, new TokenValidationParameters
-			{
-				ValidateIssuer = false,
-				ValidateAudience = false,
-				ValidateIssuerSigningKey = true,
-				IssuerSigningKey = new SymmetricSecurityKey(key),
-				ValidateLifetime = true // проверка, что не истёк
-			}, out SecurityToken validatedToken);
+			claims = handler.ValidateToken(accessToken, validationParams, out validatedToken);
 
-			// Если сюда дошло → access токен валидный (ещё живой)
-			tokenIsValid = true;
+			//var role = claims.FindFirst("Role")?.Value;
+			//var rawUserId = claims.FindFirst("UserID")?.Value;
+
+			// Проверяем роль
+			//if (string.IsNullOrWhiteSpace(role) || !allowedRoles.Contains(role))
+			//throw new SecurityTokenException($"Недопустимая роль в токене: {role}");
+
+			// Проверяем UserID: должно парситься в Guid и существовать в БД
+			//if (!Guid.TryParse(rawUserId, out var userId) || !userRepo.Exists(userId))
+			//throw new SecurityTokenException($"Невалидный или несуществующий UserID: {rawUserId}");
 		}
-		catch (SecurityTokenExpiredException)
+		catch (SecurityTokenException)
 		{
-			// Токен истёк → окей, можно смотреть refresh
-			
+
+			return false;  // false, because token is not valid
 		}
-		catch (Exception)
-		{
-			
-		}
-		return tokenIsValid;
+		return true;
+		
+		
+
 	}
 
 	public async Task<TokenResponseDTO?>RegisterAsync(UserDTO userDTO)
