@@ -19,5 +19,5 @@ public class Doctor
 	public string ContactNumber { get; set; } = string.Empty; // Phone
 	public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 	public List<Visit> Visits { get; set; } = new List<Visit>();
-
+	
 }

@@ -21,8 +21,6 @@ public class AuthController(AuthService authService) : ControllerBase
 			return BadRequest("Invalid user data.");
 		}
 		Console.WriteLine($"Username:{userDTO.Username} Password:{userDTO.Password}");
-		// Here you would typically call a service to handle the registration logic
-		// For example: var user = await _authService.RegisterAsync(userDTO);
 		var token = await _authService.RegisterAsync(userDTO);
 		if (token == null)
 		{

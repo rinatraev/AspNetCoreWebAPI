@@ -40,7 +40,6 @@ public class AuthService
 			signingCredentials: creds);
 
 		var response = new JwtSecurityTokenHandler().WriteToken(token);
-
 		return response;
 	}
 	private async Task<string> GenerateRefreshTokenAsync(User user)

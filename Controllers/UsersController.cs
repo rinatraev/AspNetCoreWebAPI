@@ -25,14 +25,14 @@ public class UsersController : ControllerBase
 		if (userId == null)
 			return BadRequest("UserId is required.");
 
-		var user = await _context.Users
-		.Include(u => u.Visits)
-			.ThenInclude(v => v.Doctor)
-		.FirstOrDefaultAsync(u => u.Id == userId);
+		var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
-		if (user == null)
-			return NotFound($"User with ID {userId} not found.");
+		if (user == null) return NotFound($"User with ID {userId} not found.");
 
-		return Ok(user.Visits);
+		//var visits = await _context.Visits.Include(v => v.Doctor).Where(u => u.UserId == userId).ToListAsync();
+		var visits = user.Visits;
+		if (visits == null) return NotFound();
+
+		return Ok(visits);
 	}
 }
