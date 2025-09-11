@@ -2,6 +2,7 @@
 using MedicalAPI.Data;
 using MedicalAPI.Entities;
 using MedicalAPI.Models;
+using MedicalAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,10 +30,8 @@ public class UsersController : ControllerBase
 
 		if (user == null) return NotFound($"User with ID {userId} not found.");
 
-		//var visits = await _context.Visits.Include(v => v.Doctor).Where(u => u.UserId == userId).ToListAsync();
-		var visits = user.Visits;
-		if (visits == null) return NotFound();
-
-		return Ok(visits);
+		var visits = await _context.Visits.Include(v => v.Doctor).Where(u => u.UserId == userId).ToListAsync();
+		var mappedVisits = visits.Select(v => MapperService.MapVisitToClientResponseDto(v)).ToList();
+		return Ok(mappedVisits);
 	}
 }
