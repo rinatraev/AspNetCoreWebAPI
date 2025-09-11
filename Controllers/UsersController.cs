@@ -30,7 +30,7 @@ public class UsersController : ControllerBase
 
 		if (user == null) return NotFound($"User with ID {userId} not found.");
 
-		var visits = await _context.Visits.Include(v => v.Doctor).Where(u => u.UserId == userId).ToListAsync();
+		var visits = await _context.Visits.Include(v => v.Doctor).Where(v => v.UserId == userId && !v.IsDeletedByUser).ToListAsync();
 		var mappedVisits = visits.Select(v => MapperService.MapVisitToClientResponseDto(v)).ToList();
 		return Ok(mappedVisits);
 	}

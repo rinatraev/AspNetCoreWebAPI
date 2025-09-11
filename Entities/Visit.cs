@@ -9,6 +9,7 @@ public class Visit
 	public Guid DoctorId { get; set; }
 	public Doctor Doctor { get; set; }
 	public int Status { get; set; } = 0; // 0 - planned, 1 - completed, 2 - canceled
+	public bool IsDeletedByUser { get; set; } = false;
 	public DateTime? Date { get; set; }
 	public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 	public DateTime? UpdatedAt { get; set; } = null;
