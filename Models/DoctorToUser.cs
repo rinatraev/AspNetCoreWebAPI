@@ -1,6 +1,6 @@
 ﻿namespace MedicalAPI.Models;
 
-public class DoctorToClientDto
+public class DoctorToUser
 {
 	public Guid Id { get; set; }
 	public string? LastName { get; set; }

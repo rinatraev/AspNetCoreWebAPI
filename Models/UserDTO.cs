@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MedicalAPI.Models;
 
-public class UserDTO
+public class UserDto
 {
 		public Guid Id { get; set; }
 		public string? LastName { get; set; } = null; // Family

@@ -6,7 +6,7 @@ namespace MedicalAPI.Entities;
 public class User
 {
 	[Key]
-	public Guid Id { get; set; } = Guid.NewGuid();
+	public Guid Id { get; set; }
 	public string? LastName { get; set; } = string.Empty; // Family
 	public string? FirstName { get; set; } = string.Empty; // Namee
 	public string? Patronymic { get; set; } = string.Empty; // Otchestvo
